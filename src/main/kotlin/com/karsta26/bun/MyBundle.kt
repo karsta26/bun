@@ -1,4 +1,4 @@
-package com.github.karsta26.bun
+package com.karsta26.bun
 
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.NonNls

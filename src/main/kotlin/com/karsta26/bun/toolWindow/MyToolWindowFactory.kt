@@ -1,4 +1,4 @@
-package com.github.karsta26.bun.toolWindow
+package com.karsta26.bun.toolWindow
 
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
@@ -8,8 +8,8 @@ import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.content.ContentFactory
-import com.github.karsta26.bun.MyBundle
-import com.github.karsta26.bun.services.MyProjectService
+import com.karsta26.bun.MyBundle
+import com.karsta26.bun.services.MyProjectService
 import javax.swing.JButton
 
 

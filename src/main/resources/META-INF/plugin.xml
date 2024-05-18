@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.karsta26.bun</id>
-    <name>bun</name>
+    <name>Bun</name>
     <vendor>karsta26</vendor>
 
     <depends>com.intellij.modules.platform</depends>
@@ -9,10 +9,11 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.karsta26.bun.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <toolWindow factoryClass="com.karsta26.bun.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
     </extensions>
 
     <applicationListeners>
-        <listener class="com.github.karsta26.bun.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
+        <listener class="com.karsta26.bun.listeners.MyApplicationActivationListener"
+                  topic="com.intellij.openapi.application.ApplicationActivationListener"/>
     </applicationListeners>
 </idea-plugin>

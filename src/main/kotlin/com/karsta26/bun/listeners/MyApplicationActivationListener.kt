@@ -1,4 +1,4 @@
-package com.github.karsta26.bun.listeners
+package com.karsta26.bun.listeners
 
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.diagnostic.thisLogger

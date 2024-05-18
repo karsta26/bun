@@ -1,9 +1,9 @@
-package com.github.karsta26.bun.services
+package com.karsta26.bun.services
 
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
-import com.github.karsta26.bun.MyBundle
+import com.karsta26.bun.MyBundle
 
 @Service(Service.Level.PROJECT)
 class MyProjectService(project: Project) {
