@@ -19,6 +19,8 @@
                 id="com.karsta26.bun.settings.BunProjectSettingsConfigurable"
                 displayName="Bun"
                 nonDefaultProject="true"/>
+        <backgroundPostStartupActivity implementation="com.karsta26.bun.listeners.BunProjectDetector"/>
+        <notificationGroup id="bun" displayType="BALLOON" key="bun.group.name"/>
     </extensions>
 
     <applicationListeners>
