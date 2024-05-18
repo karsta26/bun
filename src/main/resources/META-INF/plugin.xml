@@ -10,6 +10,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.karsta26.bun.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <configurationType implementation="com.karsta26.bun.run.BunConfigurationType"/>
     </extensions>
 
     <applicationListeners>
