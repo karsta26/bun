@@ -7,7 +7,6 @@ import com.intellij.util.ui.FormBuilder
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-
 class BunSettingsEditor : SettingsEditor<BunRunConfiguration>() {
 
     private var myPanel: JPanel? = null

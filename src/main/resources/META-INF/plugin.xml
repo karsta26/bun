@@ -11,6 +11,14 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.karsta26.bun.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
         <configurationType implementation="com.karsta26.bun.run.BunConfigurationType"/>
+        <applicationService
+                serviceImplementation="com.karsta26.bun.settings.BunSettings"/>
+        <projectConfigurable
+                parentId="language"
+                instance="com.karsta26.bun.settings.BunProjectSettingsConfigurable"
+                id="com.karsta26.bun.settings.BunProjectSettingsConfigurable"
+                displayName="Bun"
+                nonDefaultProject="true"/>
     </extensions>
 
     <applicationListeners>

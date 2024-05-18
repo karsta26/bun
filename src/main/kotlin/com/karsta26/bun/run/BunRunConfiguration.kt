@@ -17,7 +17,7 @@ class BunRunConfiguration(project: Project, factory: ConfigurationFactory) :
     }
 
     override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
-        return BunRunProfileState(options, environment)
+        return BunRunProfileState(project, options, environment)
     }
 
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> {
