@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.messages.Topic
-import com.karsta26.bun.MyBundle
+import com.karsta26.bun.BunBundle
 
 @Service(Service.Level.PROJECT)
 @State(name = "BunSettings", storages = [(Storage("bun.xml"))])
@@ -31,7 +31,7 @@ class BunSettings(private val project: Project) :
     }
 
     fun isBunLockFilePresent() = FilenameIndex.getVirtualFilesByName(
-        MyBundle.message("bun.lock.file"),
+        BunBundle.message("bun.lock.file"),
         GlobalSearchScope.allScope(project)
     ).isNotEmpty()
 
