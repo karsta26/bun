@@ -9,8 +9,7 @@ import com.intellij.openapi.vfs.VirtualFile
 object FileTypeUtil {
 
     fun isBunSupported(virtualFile: VirtualFile, fileType: FileType): Boolean {
-        return virtualFile.extension!!.matches(Regex("js|ts|jsx|cjs|mjs"))
-//        return isJavaScriptFile(virtualFile, fileType) || isTypeScriptFile(virtualFile)
+        return isJavaScriptFile(virtualFile, fileType) || isTypeScriptFile(virtualFile)
     }
 
     private fun isJavaScriptFile(virtualFile: VirtualFile, fileType: FileType): Boolean {

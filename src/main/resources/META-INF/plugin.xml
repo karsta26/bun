@@ -5,6 +5,8 @@
     <vendor>karsta26</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>JavaScriptDebugger</depends>
+    <depends>JavaScript</depends>
 
     <resource-bundle>messages.BunBundle</resource-bundle>
 
