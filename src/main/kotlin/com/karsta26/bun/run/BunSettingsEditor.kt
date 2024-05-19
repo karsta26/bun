@@ -63,6 +63,7 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
             commandField.text = it.myCommand.orEmpty()
             scriptField.text = it.myScript.orEmpty()
         }
+        toggleRunMode(!runConfiguration.options.mySingleFileMode)
     }
 
     override fun applyEditorTo(runConfiguration: BunRunConfiguration) {
@@ -90,6 +91,10 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
         }
         componentIndexesSpecificToScriptMode.forEach {
             myPanel.getComponent(it).isVisible = isScriptMode
+        }
+        commandField.setEnabled(isScriptMode)
+        if (!isScriptMode) {
+            commandField.text = "run"
         }
     }
 
