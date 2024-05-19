@@ -10,6 +10,12 @@ class BunRunConfigurationOptions : LocatableRunConfigurationOptions(), CommonPro
     @get:Attribute("jsFile")
     var myJSFile: String? by string()
 
+    @get:Attribute("command")
+    var myCommand: String? by string()
+
+    @get:Attribute("script")
+    var myScript: String? by string()
+
     @get:Attribute("packageJsonPath")
     var myPackageJsonPath: String? by string()
 

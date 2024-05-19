@@ -9,10 +9,7 @@ import com.karsta26.bun.run.fragments.JSFile
 import com.karsta26.bun.run.fragments.PackageJsonField
 import com.karsta26.bun.run.fragments.RunMode
 import com.karsta26.bun.run.fragments.WorkingDirectory
-import javax.swing.JComponent
-import javax.swing.JPanel
-import javax.swing.JRadioButton
-import javax.swing.JSeparator
+import javax.swing.*
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
@@ -26,8 +23,10 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
     private val envVarsField = EnvironmentVariablesTextFieldWithBrowseButton()
     private val bunOptionsField = RawCommandLineEditor().apply { addMacroSupport(editorField) }
     private val argumentsField = RawCommandLineEditor().apply { addMacroSupport(editorField) }
-    private val componentIndexesSpecificToSingleFileMode = listOf(3, 4, 7, 8)
-    private val componentIndexesSpecificToScriptMode = listOf(5, 6)
+    private val commandField = JTextField()
+    private val scriptField = JTextField()
+    private val componentIndexesSpecificToSingleFileMode = listOf(3, 4, 9, 10)
+    private val componentIndexesSpecificToScriptMode = listOf(5, 6, 11, 12)
 
     init {
         myPanel = FormBuilder.createFormBuilder()
@@ -38,7 +37,9 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
             .addComponent(JSeparator(), 8)
             .addLabeledComponent("&Working dir:", workingDirectoryField.getComponent())
             .addLabeledComponent("&package.json:", packageJsonField.getComponent())
+            .addLabeledComponent("&Command:", commandField)
             .addLabeledComponent("JS/TS &file:", jsFileField.getComponent())
+            .addLabeledComponent("Scrip&ts:", scriptField)
             .addLabeledComponent("A&rguments:", argumentsField)
             .addComponent(JSeparator(), 8)
             .addLabeledComponent("Bun options:", bunOptionsField)
@@ -59,6 +60,8 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
             envVarsField.isPassParentEnvs = it.isPassParentEnvs
             bunOptionsField.text = it.myBunOptions.orEmpty()
             argumentsField.text = it.myProgramParameters.orEmpty()
+            commandField.text = it.myCommand.orEmpty()
+            scriptField.text = it.myScript.orEmpty()
         }
     }
 
@@ -72,6 +75,8 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
             myPassParentEnvs = envVarsField.isPassParentEnvs
             myBunOptions = bunOptionsField.text
             myProgramParameters = argumentsField.text
+            myCommand = commandField.text
+            myScript = scriptField.text
         }
     }
 

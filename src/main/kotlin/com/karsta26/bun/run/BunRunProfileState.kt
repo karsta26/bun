@@ -19,7 +19,12 @@ class BunRunProfileState(
         val executablePath = BunSettings.getInstance(environment.project).executablePath
         val commands = mutableListOf(executablePath)
         options.myBunOptions?.let { commands.addAll(it.split(" ").map(::expandMacros)) }
-        options.myJSFile?.let { commands.add(it) }
+        if (options.mySingleFileMode) {
+            options.myJSFile?.let { commands.add(it) }
+        } else {
+            options.myCommand?.let { commands.add(it) }
+            options.myScript?.let { commands.add(it) }
+        }
         val commandLine = GeneralCommandLine(commands)
             .withWorkDirectory(options.myWorkingDirectory)
             .withEnvironment(options.envs)
