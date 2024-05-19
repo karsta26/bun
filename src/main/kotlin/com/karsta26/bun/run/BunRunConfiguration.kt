@@ -13,7 +13,7 @@ import com.intellij.openapi.project.Project
 class BunRunConfiguration(project: Project, factory: ConfigurationFactory) :
     LocatableConfigurationBase<BunRunConfigurationOptions>(project, factory), CommonProgramRunConfigurationParameters {
 
-    override fun getOptions(): BunRunConfigurationOptions {
+    public override fun getOptions(): BunRunConfigurationOptions {
         return super.getOptions() as BunRunConfigurationOptions
     }
 
@@ -23,14 +23,6 @@ class BunRunConfiguration(project: Project, factory: ConfigurationFactory) :
 
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> {
         return BunSettingsEditor(this)
-    }
-
-    fun getScriptName(): String? {
-        return options.myScriptName
-    }
-
-    fun setScriptName(scriptName: String?) {
-        options.myScriptName = scriptName
     }
 
     override fun setProgramParameters(value: String?) {

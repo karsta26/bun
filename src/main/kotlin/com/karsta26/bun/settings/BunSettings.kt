@@ -13,7 +13,7 @@ class BunSettings(private val project: Project) :
     SimplePersistentStateComponent<BunSettingsState>(BunSettingsState()) {
 
     var executablePath
-        get() = state.executablePath ?: ""
+        get() = state.executablePath.orEmpty()
         set(value) {
             state.executablePath = value
         }
