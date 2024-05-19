@@ -65,4 +65,16 @@ class BunRunConfigurationOptions : LocatableRunConfigurationOptions(), CommonPro
     override fun getEnvs() = myEnvs
     override fun getWorkingDirectory() = myWorkingDirectory
     override fun isPassParentEnvs() = myPassParentEnvs
+
+    fun isEqualTo(other: BunRunConfigurationOptions) =
+        myCommand == other.myCommand &&
+                myJSFile == other.myJSFile &&
+                myScript == other.myScript &&
+                mySingleFileMode == other.mySingleFileMode &&
+                myPackageJsonPath == other.myPackageJsonPath &&
+                myProgramParameters == other.myProgramParameters &&
+                myWorkingDirectory == other.myWorkingDirectory &&
+                myPassParentEnvs == other.myPassParentEnvs &&
+                myBunOptions == other.myBunOptions &&
+                myEnvs == other.myEnvs
 }

@@ -9,6 +9,7 @@ import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.util.ProgramParametersConfigurator.expandMacros
 import com.karsta26.bun.settings.BunSettings
+import java.nio.file.Path
 
 class BunRunProfileState(
     private val options: BunRunConfigurationOptions,
@@ -35,11 +36,16 @@ class BunRunProfileState(
             options.myScript?.let { commands.addAll(it.split(" ")) }
         }
         val commandLine = GeneralCommandLine(commands)
-            .withWorkDirectory(options.myWorkingDirectory)
             .withEnvironment(options.envs)
             .withParameters(options.myProgramParameters?.split(" ").orEmpty().map(::expandMacros))
             .withParentEnvironmentType(if (options.isPassParentEnvs) ParentEnvironmentType.CONSOLE else ParentEnvironmentType.NONE)
             .withEnvironment(colorEnvironmentVariables)
+
+        if (options.mySingleFileMode) {
+            commandLine.setWorkDirectory(options.myWorkingDirectory)
+        } else {
+            commandLine.workDirectory = Path.of(options.myPackageJsonPath!!).parent.toFile()
+        }
 
         val processHandler = ProcessHandlerFactory.getInstance()
             .createColoredProcessHandler(commandLine)

@@ -24,12 +24,19 @@
         <backgroundPostStartupActivity implementation="com.karsta26.bun.listeners.BunProjectDetector"/>
         <notificationGroup id="bun" displayType="BALLOON" key="bun.group.name"/>
         <runConfigurationProducer implementation="com.karsta26.bun.run.BunRunConfigurationProducer"/>
+        <jsbtService implementation="com.karsta26.bun.tool.BunScriptsApplicationService"/>
         <fileType
                 name="Bun lock file"
                 implementationClass="com.karsta26.bun.BunLockFileType"
                 fileNames="bun"
                 extensions="lockb"/>
     </extensions>
+
+    <actions>
+        <action id="ShowBunScripts" class="com.karsta26.bun.tool.ShowBunScriptsAction">
+            <add-to-group group-id="ShowJsbtTasks" anchor="first"/>
+        </action>
+    </actions>
 
     <applicationListeners>
         <listener class="com.karsta26.bun.listeners.MyApplicationActivationListener"

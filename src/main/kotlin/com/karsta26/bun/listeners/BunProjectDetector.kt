@@ -14,7 +14,7 @@ class BunProjectDetector : ProjectActivity {
                 NotificationGroupManager.getInstance()
                     .getNotificationGroup("bun")
                     .createNotification("It looks like you are using Bun!", NotificationType.INFORMATION)
-                    .notify(project);
+                    .notify(project)
             }
         }
     }
