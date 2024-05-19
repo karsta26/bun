@@ -15,6 +15,15 @@ class BunRunProfileState(
     environment: ExecutionEnvironment
 ) :
     CommandLineState(environment) {
+
+    private val colorEnvironmentVariables = mapOf(
+        "DEBUG_COLORS" to "true",
+        "COLORTERM" to "true",
+        "FORCE_COLOR" to "true",
+        "npm_config_color" to "always",
+        "MOCHA_COLORS" to "1"
+    )
+
     override fun startProcess(): ProcessHandler {
         val executablePath = BunSettings.getInstance(environment.project).executablePath
         val commands = mutableListOf(executablePath)
@@ -30,6 +39,8 @@ class BunRunProfileState(
             .withEnvironment(options.envs)
             .withParameters(options.myProgramParameters?.split(" ").orEmpty().map(::expandMacros))
             .withParentEnvironmentType(if (options.isPassParentEnvs) ParentEnvironmentType.CONSOLE else ParentEnvironmentType.NONE)
+            .withEnvironment(colorEnvironmentVariables)
+
         val processHandler = ProcessHandlerFactory.getInstance()
             .createColoredProcessHandler(commandLine)
         ProcessTerminatedListener.attach(processHandler)
