@@ -21,6 +21,7 @@
                 nonDefaultProject="true"/>
         <backgroundPostStartupActivity implementation="com.karsta26.bun.listeners.BunProjectDetector"/>
         <notificationGroup id="bun" displayType="BALLOON" key="bun.group.name"/>
+        <runConfigurationProducer implementation="com.karsta26.bun.run.BunRunConfigurationProducer"/>
     </extensions>
 
     <applicationListeners>

@@ -16,6 +16,13 @@ class BunRunConfiguration(project: Project, factory: ConfigurationFactory) :
         return super.getOptions() as BunRunConfigurationOptions
     }
 
+    override fun suggestedName(): String {
+        if (options.mySingleFileMode && options.myJSFile != null) {
+            return Path.of(options.myJSFile!!).fileName.toString()
+        }
+        return (options.myCommand ?: "") + " " + (options.myScript ?: "")
+    }
+
     override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
         return BunRunProfileState(options, environment)
     }
