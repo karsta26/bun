@@ -22,6 +22,11 @@
         <backgroundPostStartupActivity implementation="com.karsta26.bun.listeners.BunProjectDetector"/>
         <notificationGroup id="bun" displayType="BALLOON" key="bun.group.name"/>
         <runConfigurationProducer implementation="com.karsta26.bun.run.BunRunConfigurationProducer"/>
+        <fileType
+                name="Bun lock file"
+                implementationClass="com.karsta26.bun.BunLockFileType"
+                fileNames="bun"
+                extensions="lockb"/>
     </extensions>
 
     <applicationListeners>
