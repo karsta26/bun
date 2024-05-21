@@ -8,6 +8,7 @@ import com.intellij.execution.process.ProcessHandlerFactory
 import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.util.ProgramParametersConfigurator.expandMacros
+import com.intellij.openapi.components.service
 import com.karsta26.bun.settings.BunSettings
 import java.nio.file.Path
 
@@ -26,7 +27,7 @@ class BunRunProfileState(
     )
 
     override fun startProcess(): ProcessHandler {
-        val executablePath = BunSettings.getInstance(environment.project).executablePath
+        val executablePath = environment.project.service<BunSettings>().executablePath
         val commands = mutableListOf(executablePath)
         options.myBunOptions?.let { commands.addAll(it.split(" ").map(::expandMacros)) }
         options.myCommand?.let { commands.addAll(it.split(" ")) }

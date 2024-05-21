@@ -1,6 +1,9 @@
 package com.karsta26.bun.settings
 
-import com.intellij.openapi.components.*
+import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.SimplePersistentStateComponent
+import com.intellij.openapi.components.State
+import com.intellij.openapi.components.Storage
 import com.intellij.openapi.project.Project
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
@@ -44,10 +47,5 @@ class BunSettings(private val project: Project) :
             @JvmField
             val TOPIC = Topic("BunSettingsChanged", ChangeListener::class.java, Topic.BroadcastDirection.NONE)
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun getInstance(project: Project): BunSettings = project.service()
     }
 }
