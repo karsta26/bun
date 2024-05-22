@@ -7,6 +7,7 @@ import com.intellij.lang.javascript.buildTools.npm.PackageJsonUtil
 import com.intellij.lang.javascript.library.JSLibraryUtil
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.ThrowableComputable
@@ -25,7 +26,7 @@ import kotlin.io.path.pathString
 class BunScriptsService(project: Project) : JsbtService(project) {
 
     override fun getApplicationService() = BunScriptsApplicationService.getInstance()
-    override fun getFileManager() = BunFileManager.getInstance(myProject)
+    override fun getFileManager() = myProject.service<BunFileManager>()
     override fun createTaskTreeView(layoutPlace: String?) = BunTaskTreeView(this, myProject, layoutPlace)
     override fun isBuildfile(file: VirtualFile) = PackageJsonUtil.isPackageJsonFile(file)
     override fun createEmptyFileStructure(buildfile: VirtualFile) = BunScriptsStructure(buildfile)
@@ -43,7 +44,7 @@ class BunScriptsService(project: Project) : JsbtService(project) {
             } else {
                 val scope = JSLibraryUtil.getContentScopeWithoutLibraries(myProject)
                 val files = FilenameIndex.getVirtualFilesByName("package.json", scope)
-                mutableListOf(*files.toTypedArray())
+                files.toMutableList()
             }
         })
     }
@@ -99,12 +100,8 @@ class BunScriptsService(project: Project) : JsbtService(project) {
         bunRunConfiguration.options.apply {
             mySingleFileMode = false
             myPackageJsonPath = taskSet.structure.buildfile.path
-            if (taskSet.name == "install") {
-                myCommand = "install"
-            } else {
-                myCommand = "run"
-                myScript = taskSet.taskNames.joinToString(" ")
-            }
+            myCommand = if (taskSet.name == "install") "install" else "run"
+            myScript = if (taskSet.name == "install") myScript else taskSet.taskNames.joinToString(" ")
         }
         bunRunConfiguration.setGeneratedName()
     }

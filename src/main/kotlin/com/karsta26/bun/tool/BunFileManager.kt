@@ -6,8 +6,4 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 
 @Service(Service.Level.PROJECT)
-class BunFileManager(project: Project) : JsbtFileManager(project, project.service<BunScriptsService>()) {
-    companion object {
-        fun getInstance(project: Project) = project.service<BunFileManager>()
-    }
-}
+class BunFileManager(project: Project) : JsbtFileManager(project, project.service<BunScriptsService>())
