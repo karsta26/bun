@@ -6,7 +6,7 @@ import javax.swing.ButtonGroup
 import javax.swing.JPanel
 
 class RunMode {
-    var script: JBRadioButton = JBRadioButton("Script").apply { isSelected = true }
+    var script: JBRadioButton = JBRadioButton("Script")
     var singleFile: JBRadioButton = JBRadioButton("Single file")
     private var runModeButtons: JPanel
 

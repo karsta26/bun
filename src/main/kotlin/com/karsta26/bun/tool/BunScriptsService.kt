@@ -34,7 +34,7 @@ class BunScriptsService(project: Project) : JsbtService(project) {
     override fun createEmptyFileStructure(buildfile: VirtualFile) = BunScriptsStructure(buildfile)
     override fun getConfigurationFactory() = runConfigurationType<BunConfigurationType>()
     override fun createToolWindowManager() =
-        JsbtToolWindowManager(myProject, "bun", BunIcons.BunIcon, "reference.tool.window.bun", this)
+        JsbtToolWindowManager(myProject, "Bun", BunIcons.BunIcon, "reference.tool.window.bun", this)
 
     override fun detectAllBuildfiles(): MutableList<VirtualFile> {
         if (DumbService.isDumb(myProject)) {

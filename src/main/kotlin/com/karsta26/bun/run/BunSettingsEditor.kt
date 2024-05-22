@@ -4,11 +4,11 @@ import com.intellij.execution.configuration.EnvironmentVariablesTextFieldWithBro
 import com.intellij.execution.ui.CommonProgramParametersPanel.addMacroSupport
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.ui.RawCommandLineEditor
-import com.intellij.util.ui.FormBuilder
+import com.intellij.ui.dsl.builder.Align
+import com.intellij.ui.dsl.builder.panel
 import com.karsta26.bun.run.fragments.*
 import javax.swing.JPanel
 import javax.swing.JRadioButton
-import javax.swing.JSeparator
 import javax.swing.JTextField
 
 class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEditor<BunRunConfiguration>() {
@@ -27,24 +27,20 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
     private val componentIndexesSpecificToScriptMode = listOf(5, 6, 11, 12)
 
     init {
-        myPanel = FormBuilder.createFormBuilder()
-            .setAlignLabelOnRight(false)
-            .setHorizontalGap(10)
-            .setVerticalGap(4)
-            .addLabeledComponent("Run mode: ", runMode.getComponent())
-            .addComponent(JSeparator(), 8)
-            .addLabeledComponent("&Working dir:", workingDirectoryField.getComponent())
-            .addLabeledComponent("&package.json:", packageJsonField.getComponent())
-            .addLabeledComponent("&Command:", commandField.getComponent())
-            .addLabeledComponent("JS/TS &file:", jsFileField.getComponent())
-            .addLabeledComponent("Scrip&ts:", scriptField)
-            .addLabeledComponent("A&rguments:", argumentsField)
-            .addComponent(JSeparator(), 8)
-            .addLabeledComponent("Bun options:", bunOptionsField)
-            .addLabeledComponent("Environment:", envVarsField)
-            .panel
+        myPanel = panel {
+            row("Run mode: ") { cell(runMode.getComponent()) }
+            separator()
+            row("&Working dir:") { cell(workingDirectoryField.getComponent()).align(Align.FILL) }
+            row("&package.json:") { cell(packageJsonField.getComponent()).align(Align.FILL) }
+            row("&Command:") { cell(commandField.getComponent()).align(Align.FILL) }
+            row("JS/TS &file:") { cell(jsFileField.getComponent()).align(Align.FILL) }
+            row("Scrip&ts:") { cell(scriptField).align(Align.FILL) }
+            row("A&rguments:") { cell(argumentsField).align(Align.FILL) }
+            separator()
+            row("Bun options:") { cell(bunOptionsField).align(Align.FILL) }
+            row("Environment:") { cell(envVarsField).align(Align.FILL) }
+        }
 
-        toggleRunMode(false)
         addListenersToRunModeToggle()
     }
 
