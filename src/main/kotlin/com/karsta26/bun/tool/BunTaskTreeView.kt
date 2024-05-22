@@ -9,6 +9,7 @@ import com.intellij.pom.Navigatable
 import com.intellij.ui.ColoredTreeCellRenderer
 import com.intellij.ui.SimpleTextAttributes
 import com.karsta26.bun.BunIcons
+import com.karsta26.bun.run.BunCommand
 import javax.swing.tree.DefaultMutableTreeNode
 
 class BunTaskTreeView(service: JsbtService, project: Project, layoutPlace: String?) :
@@ -42,7 +43,10 @@ class BunTaskTreeView(service: JsbtService, project: Project, layoutPlace: Strin
 
             is BunScript -> {
                 with(renderer) {
-                    icon = if (userObject.name == "install") AllIcons.Actions.Install else AllIcons.Nodes.PackageLocal
+                    icon = when (userObject.name) {
+                        BunCommand.INSTALL.command -> AllIcons.Actions.Install
+                        else -> AllIcons.Nodes.PackageLocal
+                    }
                     append(userObject.name, SimpleTextAttributes.REGULAR_ATTRIBUTES)
                 }
             }

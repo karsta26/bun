@@ -15,6 +15,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FilenameIndex
 import com.karsta26.bun.BunIcons
+import com.karsta26.bun.run.BunCommand.INSTALL
+import com.karsta26.bun.run.BunCommand.RUN
 import com.karsta26.bun.run.BunConfigurationType
 import com.karsta26.bun.run.BunRunConfiguration
 import com.karsta26.bun.run.BunRunConfigurationOptions
@@ -84,8 +86,12 @@ class BunScriptsService(project: Project) : JsbtService(project) {
             is BunRunConfigurationOptions -> options.isEqualTo(runOptions)
             is JsbtTaskSet -> {
                 val taskNamesAreEqual = when (runOptions.myCommand) {
-                    "run" -> JsbtUtil.equalsOrderless(options.taskNames, runOptions.myScript?.split(" ").orEmpty())
-                    "install" -> options.name == "install"
+                    RUN.command -> JsbtUtil.equalsOrderless(
+                        options.taskNames,
+                        runOptions.myScript?.split(" ").orEmpty()
+                    )
+
+                    INSTALL.command -> options.name == INSTALL.command
                     else -> false
                 }
                 taskNamesAreEqual && pathAreEqual(options, runOptions)
@@ -100,8 +106,8 @@ class BunScriptsService(project: Project) : JsbtService(project) {
         bunRunConfiguration.options.apply {
             mySingleFileMode = false
             myPackageJsonPath = taskSet.structure.buildfile.path
-            myCommand = if (taskSet.name == "install") "install" else "run"
-            myScript = if (taskSet.name == "install") myScript else taskSet.taskNames.joinToString(" ")
+            myCommand = if (taskSet.name == INSTALL.command) INSTALL.command else RUN.command
+            myScript = if (taskSet.name == INSTALL.command) myScript else taskSet.taskNames.joinToString(" ")
         }
         bunRunConfiguration.setGeneratedName()
     }

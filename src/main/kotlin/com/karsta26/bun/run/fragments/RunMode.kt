@@ -6,7 +6,7 @@ import javax.swing.ButtonGroup
 import javax.swing.JPanel
 
 class RunMode {
-    var script: JBRadioButton = JBRadioButton("Script").apply { setSelected(true) }
+    var script: JBRadioButton = JBRadioButton("Script").apply { isSelected = true }
     var singleFile: JBRadioButton = JBRadioButton("Single file")
     private var runModeButtons: JPanel
 
@@ -26,8 +26,8 @@ class RunMode {
     }
 
     fun setSingleFileMode(singleFileMode: Boolean) {
-        singleFile.setSelected(singleFileMode)
-        script.setSelected(!singleFileMode)
+        singleFile.isSelected = singleFileMode
+        script.isSelected = !singleFileMode
     }
 
     fun isSingleFileMode() = singleFile.isSelected

@@ -16,7 +16,5 @@ object FileTypeUtil {
         return TypeScriptUtil.isJavaScriptFile(virtualFile.name) || fileType is JavaScriptFileType || fileType is JSXHarmonyFileType
     }
 
-    private fun isTypeScriptFile(virtualFile: VirtualFile): Boolean {
-        return TypeScriptUtil.isTypeScriptFile(virtualFile)
-    }
+    private fun isTypeScriptFile(virtualFile: VirtualFile) = TypeScriptUtil.isTypeScriptFile(virtualFile)
 }

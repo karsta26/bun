@@ -8,6 +8,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.impl.PsiManagerEx
+import com.karsta26.bun.run.BunCommand
 
 object BunScriptsUtil {
 
@@ -27,7 +28,7 @@ object BunScriptsUtil {
                 ?.propertyList
                 ?.map { property -> BunScript(structure, property.name) }
                 ?.toMutableList()
-                ?.apply { add(0, BunScript(structure, "install")) }
+                ?.apply { add(0, BunScript(structure, BunCommand.INSTALL.command)) }
 
             if (scripts != null) {
                 structure.scripts = scripts

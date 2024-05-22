@@ -9,9 +9,10 @@ import com.karsta26.bun.run.fragments.JSFile
 import com.karsta26.bun.run.fragments.PackageJsonField
 import com.karsta26.bun.run.fragments.RunMode
 import com.karsta26.bun.run.fragments.WorkingDirectory
-import javax.swing.*
-import javax.swing.event.ChangeEvent
-import javax.swing.event.ChangeListener
+import javax.swing.JPanel
+import javax.swing.JRadioButton
+import javax.swing.JSeparator
+import javax.swing.JTextField
 
 class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEditor<BunRunConfiguration>() {
 
@@ -50,6 +51,8 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
         addListenersToRunModeToggle()
     }
 
+    override fun createEditor() = myPanel
+
     override fun resetEditorFrom(runConfiguration: BunRunConfiguration) {
         runConfiguration.options.let {
             runMode.setSingleFileMode(it.mySingleFileMode)
@@ -81,39 +84,26 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
         }
     }
 
-    override fun createEditor(): JComponent {
-        return myPanel
-    }
-
     private fun toggleRunMode(isScriptMode: Boolean) {
-        componentIndexesSpecificToSingleFileMode.forEach {
-            myPanel.getComponent(it).isVisible = !isScriptMode
+        val visibilitySetter = { componentIndexes: List<Int>, visibility: Boolean ->
+            componentIndexes.forEach { myPanel.getComponent(it).isVisible = visibility }
         }
-        componentIndexesSpecificToScriptMode.forEach {
-            myPanel.getComponent(it).isVisible = isScriptMode
-        }
-        commandField.setEnabled(isScriptMode)
-        if (!isScriptMode) {
-            commandField.text = "run"
+
+        visibilitySetter(componentIndexesSpecificToSingleFileMode, !isScriptMode)
+        visibilitySetter(componentIndexesSpecificToScriptMode, isScriptMode)
+
+        commandField.apply {
+            isEnabled = isScriptMode
+            if (!isScriptMode) text = BunCommand.RUN.command
         }
     }
 
     private fun addListenersToRunModeToggle() {
-        runMode.script.addChangeListener(object : ChangeListener {
-            override fun stateChanged(e: ChangeEvent?) {
-                val sourceState = e?.source ?: return
-                if (sourceState is JRadioButton) {
-                    toggleRunMode(sourceState.isSelected)
-                }
-            }
-        })
-        runMode.singleFile.addChangeListener(object : ChangeListener {
-            override fun stateChanged(e: ChangeEvent?) {
-                val sourceState = e?.source ?: return
-                if (sourceState is JRadioButton) {
-                    toggleRunMode(!sourceState.isSelected)
-                }
-            }
-        })
+        runMode.script.addChangeListener { e ->
+            (e?.source as? JRadioButton)?.let { toggleRunMode(it.isSelected) }
+        }
+        runMode.singleFile.addChangeListener { e ->
+            (e?.source as? JRadioButton)?.let { toggleRunMode(!it.isSelected) }
+        }
     }
 }
