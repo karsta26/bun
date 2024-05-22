@@ -11,7 +11,7 @@ class BunRunConfigurationOptions : LocatableRunConfigurationOptions(), CommonPro
     var myJSFile: String? by string()
 
     @get:Attribute("command")
-    var myCommand: String? by string()
+    var myCommand: BunCommand by enum(BunCommand.RUN)
 
     @get:Attribute("script")
     var myScript: String? by string()

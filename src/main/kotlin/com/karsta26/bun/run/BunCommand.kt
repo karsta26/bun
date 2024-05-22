@@ -1,6 +1,6 @@
 package com.karsta26.bun.run
 
-enum class BunCommand() {
+enum class BunCommand {
     RUN,
     BUILD,
     X,
@@ -14,8 +14,6 @@ enum class BunCommand() {
     PM,
     DEV,
     UPGRADE,
-    COMPLETIONS,
-    DISCORD,
     HELP,
     INSTALL;
 

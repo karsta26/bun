@@ -86,12 +86,12 @@ class BunScriptsService(project: Project) : JsbtService(project) {
             is BunRunConfigurationOptions -> options.isEqualTo(runOptions)
             is JsbtTaskSet -> {
                 val taskNamesAreEqual = when (runOptions.myCommand) {
-                    RUN.command -> JsbtUtil.equalsOrderless(
+                    RUN -> JsbtUtil.equalsOrderless(
                         options.taskNames,
                         runOptions.myScript?.split(" ").orEmpty()
                     )
 
-                    INSTALL.command -> options.name == INSTALL.command
+                    INSTALL -> options.name == INSTALL.command
                     else -> false
                 }
                 taskNamesAreEqual && pathAreEqual(options, runOptions)
@@ -106,7 +106,7 @@ class BunScriptsService(project: Project) : JsbtService(project) {
         bunRunConfiguration.options.apply {
             mySingleFileMode = false
             myPackageJsonPath = taskSet.structure.buildfile.path
-            myCommand = if (taskSet.name == INSTALL.command) INSTALL.command else RUN.command
+            myCommand = if (taskSet.name == INSTALL.command) INSTALL else RUN
             myScript = if (taskSet.name == INSTALL.command) myScript else taskSet.taskNames.joinToString(" ")
         }
         bunRunConfiguration.setGeneratedName()

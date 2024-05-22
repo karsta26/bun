@@ -5,10 +5,7 @@ import com.intellij.execution.ui.CommonProgramParametersPanel.addMacroSupport
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.ui.RawCommandLineEditor
 import com.intellij.util.ui.FormBuilder
-import com.karsta26.bun.run.fragments.JSFile
-import com.karsta26.bun.run.fragments.PackageJsonField
-import com.karsta26.bun.run.fragments.RunMode
-import com.karsta26.bun.run.fragments.WorkingDirectory
+import com.karsta26.bun.run.fragments.*
 import javax.swing.JPanel
 import javax.swing.JRadioButton
 import javax.swing.JSeparator
@@ -24,7 +21,7 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
     private val envVarsField = EnvironmentVariablesTextFieldWithBrowseButton()
     private val bunOptionsField = RawCommandLineEditor().apply { addMacroSupport(editorField) }
     private val argumentsField = RawCommandLineEditor().apply { addMacroSupport(editorField) }
-    private val commandField = JTextField()
+    private val commandField = BunCommandField()
     private val scriptField = JTextField()
     private val componentIndexesSpecificToSingleFileMode = listOf(3, 4, 9, 10)
     private val componentIndexesSpecificToScriptMode = listOf(5, 6, 11, 12)
@@ -38,7 +35,7 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
             .addComponent(JSeparator(), 8)
             .addLabeledComponent("&Working dir:", workingDirectoryField.getComponent())
             .addLabeledComponent("&package.json:", packageJsonField.getComponent())
-            .addLabeledComponent("&Command:", commandField)
+            .addLabeledComponent("&Command:", commandField.getComponent())
             .addLabeledComponent("JS/TS &file:", jsFileField.getComponent())
             .addLabeledComponent("Scrip&ts:", scriptField)
             .addLabeledComponent("A&rguments:", argumentsField)
@@ -63,7 +60,7 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
             envVarsField.isPassParentEnvs = it.isPassParentEnvs
             bunOptionsField.text = it.myBunOptions.orEmpty()
             argumentsField.text = it.myProgramParameters.orEmpty()
-            commandField.text = it.myCommand.orEmpty()
+            commandField.item = it.myCommand
             scriptField.text = it.myScript.orEmpty()
         }
         toggleRunMode(!runConfiguration.options.mySingleFileMode)
@@ -79,7 +76,7 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
             myPassParentEnvs = envVarsField.isPassParentEnvs
             myBunOptions = bunOptionsField.text
             myProgramParameters = argumentsField.text
-            myCommand = commandField.text
+            myCommand = commandField.item
             myScript = scriptField.text
         }
     }
@@ -92,10 +89,7 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
         visibilitySetter(componentIndexesSpecificToSingleFileMode, !isScriptMode)
         visibilitySetter(componentIndexesSpecificToScriptMode, isScriptMode)
 
-        commandField.apply {
-            isEnabled = isScriptMode
-            if (!isScriptMode) text = BunCommand.RUN.command
-        }
+        commandField.toggleRunMode(isScriptMode)
     }
 
     private fun addListenersToRunModeToggle() {

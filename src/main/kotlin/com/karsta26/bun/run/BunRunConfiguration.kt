@@ -20,7 +20,7 @@ class BunRunConfiguration(project: Project, factory: ConfigurationFactory) :
         if (options.mySingleFileMode && options.myJSFile != null) {
             return Path.of(options.myJSFile!!).fileName.toString()
         }
-        return listOfNotNull(options.myCommand, options.myScript).joinToString(" ").trim()
+        return listOfNotNull(options.myCommand.command, options.myScript).joinToString(" ").trim()
     }
 
     override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
