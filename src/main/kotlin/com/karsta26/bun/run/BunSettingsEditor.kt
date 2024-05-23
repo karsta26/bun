@@ -5,8 +5,10 @@ import com.intellij.execution.ui.CommonProgramParametersPanel.addMacroSupport
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.ui.RawCommandLineEditor
 import com.intellij.ui.dsl.builder.Align
+import com.intellij.ui.dsl.builder.Row
 import com.intellij.ui.dsl.builder.panel
 import com.karsta26.bun.run.fragments.*
+import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JRadioButton
 import javax.swing.JTextField
@@ -30,19 +32,21 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
         myPanel = panel {
             row("Run mode: ") { cell(runMode.getComponent()) }
             separator()
-            row("&Working dir:") { cell(workingDirectoryField.getComponent()).align(Align.FILL) }
-            row("&package.json:") { cell(packageJsonField.getComponent()).align(Align.FILL) }
-            row("&Command:") { cell(commandField.getComponent()).align(Align.FILL) }
-            row("JS/TS &file:") { cell(jsFileField.getComponent()).align(Align.FILL) }
-            row("Scrip&ts:") { cell(scriptField).align(Align.FILL) }
-            row("A&rguments:") { cell(argumentsField).align(Align.FILL) }
+            row("&Working dir:") { fillCell(workingDirectoryField.getComponent()) }
+            row("&package.json:") { fillCell(packageJsonField.getComponent()) }
+            row("&Command:") { fillCell(commandField.getComponent()) }
+            row("JS/TS &file:") { fillCell(jsFileField.getComponent()) }
+            row("Scrip&ts:") { fillCell(scriptField) }
+            row("A&rguments:") { fillCell(argumentsField) }
             separator()
-            row("Bun options:") { cell(bunOptionsField).align(Align.FILL) }
-            row("Environment:") { cell(envVarsField).align(Align.FILL) }
+            row("Bun options:") { fillCell(bunOptionsField) }
+            row("Environment:") { fillCell(envVarsField) }
         }
 
         addListenersToRunModeToggle()
     }
+
+    private fun Row.fillCell(component: JComponent) = cell(component).align(Align.FILL)
 
     override fun createEditor() = myPanel
 
