@@ -1,6 +1,6 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.karsta26.bun</id>
+    <id>com.karsta26.bun</id>
     <name>Bun</name>
     <vendor>karsta26</vendor>
 
