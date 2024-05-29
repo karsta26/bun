@@ -23,7 +23,7 @@
                 nonDefaultProject="true"/>
         <backgroundPostStartupActivity implementation="com.karsta26.bun.listeners.BunProjectDetector"/>
         <notificationGroup id="bun" displayType="BALLOON" key="bun.group.name"/>
-        <runConfigurationProducer implementation="com.karsta26.bun.run.BunRunConfigurationProducer"/>
+        <runConfigurationProducer implementation="com.karsta26.bun.run.producer.BunRunConfigurationProducer"/>
         <jsbtService implementation="com.karsta26.bun.tool.BunScriptsApplicationService"/>
         <fileType
                 name="Bun lock file"

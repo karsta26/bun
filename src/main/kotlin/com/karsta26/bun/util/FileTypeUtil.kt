@@ -5,8 +5,11 @@ import com.intellij.lang.javascript.JavaScriptFileType
 import com.intellij.lang.javascript.ecmascript6.TypeScriptUtil
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiFile
 
 object FileTypeUtil {
+
+    fun isBunSupported(psiFile: PsiFile) = isBunSupported(psiFile.virtualFile, psiFile.fileType)
 
     fun isBunSupported(virtualFile: VirtualFile, fileType: FileType): Boolean {
         return isJavaScriptFile(virtualFile, fileType) || isTypeScriptFile(virtualFile)
