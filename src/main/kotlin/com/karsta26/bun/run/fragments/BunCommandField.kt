@@ -15,7 +15,7 @@ class BunCommandField {
         }
 
     init {
-        commandField.setRenderer(SimpleListCellRenderer.create("", BunCommand::command))
+        commandField.renderer = SimpleListCellRenderer.create("", BunCommand::command)
         commandField.model = DefaultComboBoxModel(BunCommand.entries.sorted().toTypedArray()).apply {
             selectedItem = BunCommand.RUN
         }

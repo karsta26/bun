@@ -3,7 +3,7 @@ package com.karsta26.bun.run.producer
 import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.psi.PsiFile
 import com.karsta26.bun.run.BunRunConfiguration
-import com.karsta26.bun.util.FileTypeUtil.isBunSupported
+import com.karsta26.bun.util.isBunSupported
 
 object ProducerFromFile {
     fun setupFileConfigurationFromContext(
