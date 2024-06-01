@@ -9,7 +9,6 @@ import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.util.ProgramParametersConfigurator.expandMacros
 import com.intellij.lang.javascript.buildTools.HyperlinkListeningExecutionException
-import com.intellij.openapi.components.service
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.util.text.HtmlBuilder
 import com.karsta26.bun.settings.BunSettings
@@ -31,7 +30,7 @@ class BunRunProfileState(
     )
 
     override fun startProcess(): ProcessHandler {
-        val executablePath = environment.project.service<BunSettings>().executablePath.also { validateExec(it) }
+        val executablePath = BunSettings.getInstance(environment.project).executablePath.also { validateExec(it) }
         val commands = mutableListOf(executablePath)
         options.myBunOptions?.let { commands.addAll(it.split(" ").map(::expandMacros)) }
         options.myCommand.let { commands.add(it.command) }

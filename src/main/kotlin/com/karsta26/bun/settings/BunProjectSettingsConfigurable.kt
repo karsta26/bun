@@ -1,6 +1,5 @@
 package com.karsta26.bun.settings
 
-import com.intellij.openapi.components.service
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.options.BoundSearchableConfigurable
 import com.intellij.openapi.project.Project
@@ -15,7 +14,7 @@ class BunProjectSettingsConfigurable(private val project: Project) :
     BoundSearchableConfigurable(BunBundle.message("bun.name"), BunBundle.message("bun.name"), "Settings.Bun") {
 
     private val settings
-        get() = project.service<BunSettings>()
+        get() = BunSettings.getInstance(project)
 
     override fun createPanel(): DialogPanel {
         return panel {

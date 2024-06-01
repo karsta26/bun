@@ -28,7 +28,7 @@ import kotlin.io.path.pathString
 class BunScriptsService(project: Project) : JsbtService(project) {
 
     override fun getApplicationService() = BunScriptsApplicationService.getInstance()
-    override fun getFileManager() = myProject.service<BunFileManager>()
+    override fun getFileManager() = BunFileManager.getInstance(myProject)
     override fun createTaskTreeView(layoutPlace: String?) = BunTaskTreeView(this, myProject, layoutPlace)
     override fun isBuildfile(file: VirtualFile) = PackageJsonUtil.isPackageJsonFile(file)
     override fun createEmptyFileStructure(buildfile: VirtualFile) = BunScriptsStructure(buildfile)
@@ -125,4 +125,9 @@ class BunScriptsService(project: Project) : JsbtService(project) {
         options: JsbtTaskSet,
         runOptions: BunRunConfigurationOptions
     ) = Path(options.structure.buildfile.path).pathString == Path(runOptions.myPackageJsonPath.orEmpty()).pathString
+
+    companion object {
+        @JvmStatic
+        fun getInstance(project: Project): BunScriptsService = project.service()
+    }
 }
