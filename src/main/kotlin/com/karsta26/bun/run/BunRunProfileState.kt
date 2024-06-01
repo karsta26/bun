@@ -8,15 +8,19 @@ import com.intellij.execution.process.ProcessHandlerFactory
 import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.util.ProgramParametersConfigurator.expandMacros
+import com.intellij.lang.javascript.buildTools.HyperlinkListeningExecutionException
 import com.intellij.openapi.components.service
+import com.intellij.openapi.options.ShowSettingsUtil
+import com.intellij.openapi.util.text.HtmlBuilder
 import com.karsta26.bun.settings.BunSettings
 import java.nio.file.Path
+import kotlin.io.path.Path
+import kotlin.io.path.isRegularFile
 
 class BunRunProfileState(
     private val options: BunRunConfigurationOptions,
     environment: ExecutionEnvironment
-) :
-    CommandLineState(environment) {
+) : CommandLineState(environment) {
 
     private val colorEnvironmentVariables = mapOf(
         "DEBUG_COLORS" to "true",
@@ -27,7 +31,7 @@ class BunRunProfileState(
     )
 
     override fun startProcess(): ProcessHandler {
-        val executablePath = environment.project.service<BunSettings>().executablePath
+        val executablePath = environment.project.service<BunSettings>().executablePath.also { validateExec(it) }
         val commands = mutableListOf(executablePath)
         options.myBunOptions?.let { commands.addAll(it.split(" ").map(::expandMacros)) }
         options.myCommand.let { commands.add(it.command) }
@@ -52,5 +56,18 @@ class BunRunProfileState(
             .createColoredProcessHandler(commandLine)
         ProcessTerminatedListener.attach(processHandler)
         return processHandler
+    }
+
+    private fun validateExec(executablePath: String) {
+        if (!Path(executablePath).isRegularFile()) {
+            val message = HtmlBuilder()
+                .append("Bun executable path is " + if (executablePath.isBlank()) "not set" else "invalid").br()
+                .appendLink("", "Edit executable path")
+                .toString()
+            val exception = HyperlinkListeningExecutionException(message) {
+                ShowSettingsUtil.getInstance().showSettingsDialog(environment.project, "BunSettings")
+            }
+            throw exception
+        }
     }
 }
