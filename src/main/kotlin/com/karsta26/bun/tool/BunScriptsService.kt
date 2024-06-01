@@ -7,7 +7,6 @@ import com.intellij.lang.javascript.buildTools.npm.PackageJsonUtil
 import com.intellij.lang.javascript.library.JSLibraryUtil
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.ThrowableComputable
@@ -27,7 +26,7 @@ import kotlin.io.path.pathString
 @Service(Service.Level.PROJECT)
 class BunScriptsService(project: Project) : JsbtService(project) {
 
-    override fun getApplicationService() = BunScriptsApplicationService.getInstance()
+    override fun getApplicationService() = BunScriptsApplicationService.Util.getInstance()
     override fun getFileManager() = BunFileManager.getInstance(myProject)
     override fun createTaskTreeView(layoutPlace: String?) = BunTaskTreeView(this, myProject, layoutPlace)
     override fun isBuildfile(file: VirtualFile) = PackageJsonUtil.isPackageJsonFile(file)
@@ -128,6 +127,6 @@ class BunScriptsService(project: Project) : JsbtService(project) {
 
     companion object {
         @JvmStatic
-        fun getInstance(project: Project): BunScriptsService = project.service()
+        fun getInstance(project: Project): BunScriptsService = project.getService(BunScriptsService::class.java)
     }
 }

@@ -10,7 +10,9 @@ class BunScriptsApplicationService : JsbtApplicationService() {
     override fun getIcon() = BunIcons.BunIcon
     override fun getBuildfileCommonName() = "package.json"
 
-    companion object {
-        fun getInstance() = EP_NAME.findExtensionOrFail(BunScriptsApplicationService::class.java)
+    object Util {
+        @JvmStatic
+        fun getInstance(): BunScriptsApplicationService =
+            EP_NAME.findExtensionOrFail(BunScriptsApplicationService::class.java)
     }
 }
