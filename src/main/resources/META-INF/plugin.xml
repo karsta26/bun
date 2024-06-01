@@ -2,8 +2,8 @@
 <idea-plugin>
     <id>com.karsta26.bun</id>
     <name>Bun</name>
-    <vendor>karsta26</vendor>
-
+    <vendor email="karsta26@gmail.com" url="https://github.com/karsta26">karsta26</vendor>
+    <category>JavaScript Frameworks and Tools</category>
     <depends>com.intellij.modules.platform</depends>
     <depends>JavaScriptDebugger</depends>
     <depends>JavaScript</depends>
@@ -11,7 +11,6 @@
     <resource-bundle>messages.BunBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.karsta26.bun.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
         <configurationType implementation="com.karsta26.bun.run.BunConfigurationType"/>
         <applicationService
                 serviceImplementation="com.karsta26.bun.settings.BunSettings"/>
@@ -38,9 +37,4 @@
             <add-to-group group-id="ShowJsbtTasks" anchor="first"/>
         </action>
     </actions>
-
-    <applicationListeners>
-        <listener class="com.karsta26.bun.listeners.MyApplicationActivationListener"
-                  topic="com.intellij.openapi.application.ApplicationActivationListener"/>
-    </applicationListeners>
 </idea-plugin>
