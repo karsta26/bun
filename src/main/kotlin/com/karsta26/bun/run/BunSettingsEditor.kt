@@ -2,11 +2,16 @@ package com.karsta26.bun.run
 
 import com.intellij.execution.configuration.EnvironmentVariablesTextFieldWithBrowseButton
 import com.intellij.execution.ui.CommonProgramParametersPanel.addMacroSupport
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.options.SettingsEditor
+import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.RawCommandLineEditor
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.Row
 import com.intellij.ui.dsl.builder.panel
+import com.intellij.util.ui.SwingHelper
+import com.karsta26.bun.run.before.BunBeforeRunTaskDialog
 import com.karsta26.bun.run.fragments.*
 import javax.swing.JComponent
 import javax.swing.JPanel
@@ -48,10 +53,14 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
 
     private fun Row.fillCell(component: JComponent) = cell(component).align(Align.FILL)
 
-    override fun createEditor() = myPanel
+    public override fun createEditor() = myPanel
 
     override fun resetEditorFrom(runConfiguration: BunRunConfiguration) {
-        runConfiguration.options.let {
+        resetEditorFrom(runConfiguration.options)
+    }
+
+    fun resetEditorFrom(options: BunRunConfigurationOptions) {
+        options.let {
             runMode.setSingleFileMode(it.mySingleFileMode)
             packageJsonField.setPath(it.myPackageJsonPath.orEmpty())
             workingDirectoryField.setPath(it.myWorkingDirectory.orEmpty())
@@ -63,11 +72,16 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
             commandField.item = it.myCommand
             scriptField.text = it.myScript.orEmpty()
         }
-        toggleRunMode(!runConfiguration.options.mySingleFileMode)
+        toggleRunMode(!options.mySingleFileMode)
+        setPreferredDialogSize()
     }
 
     override fun applyEditorTo(runConfiguration: BunRunConfiguration) {
-        runConfiguration.options.apply {
+        applyEditorTo(runConfiguration.options)
+    }
+
+    fun applyEditorTo(options: BunRunConfigurationOptions) {
+        options.apply {
             mySingleFileMode = runMode.isSingleFileMode()
             myPackageJsonPath = packageJsonField.getPath()
             myWorkingDirectory = workingDirectoryField.getPath()
@@ -98,6 +112,17 @@ class BunSettingsEditor(bunRunConfiguration: BunRunConfiguration) : SettingsEdit
         }
         runMode.singleFile.addChangeListener { e ->
             (e?.source as? JRadioButton)?.let { toggleRunMode(!it.isSelected) }
+        }
+    }
+
+    private fun setPreferredDialogSize() {
+        val dialogWrapper = DialogWrapper.findInstance(myPanel)
+        if (dialogWrapper is BunBeforeRunTaskDialog) {
+            SwingHelper.setPreferredWidthToFitText(packageJsonField.getComponent())
+            SwingHelper.setPreferredWidthToFitText(workingDirectoryField.getComponent())
+            SwingHelper.setPreferredWidthToFitText(jsFileField.getComponent())
+            ApplicationManager.getApplication()
+                .invokeLater({ SwingHelper.adjustDialogSizeToFitPreferredSize(dialogWrapper) }, ModalityState.any())
         }
     }
 }
