@@ -9,50 +9,29 @@ import io.netty.channel.Channel
 import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInitializer
-import io.netty.handler.codec.http.DefaultFullHttpRequest
-import io.netty.handler.codec.http.HttpClientCodec
-import io.netty.handler.codec.http.HttpHeaderNames
-import io.netty.handler.codec.http.HttpMethod
-import io.netty.handler.codec.http.HttpObjectAggregator
-import io.netty.handler.codec.http.HttpVersion
-import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame
-import io.netty.util.CharsetUtil
+import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.socket.nio.NioSocketChannel
+import io.netty.handler.codec.http.DefaultHttpHeaders
+import io.netty.handler.codec.http.EmptyHttpHeaders
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory
+import io.netty.handler.codec.http.websocketx.WebSocketFrameAggregator
+import io.netty.handler.codec.http.websocketx.WebSocketVersion
 import org.jetbrains.concurrency.AsyncPromise
+import org.jetbrains.concurrency.thenRun
 import org.jetbrains.debugger.MessagingLogger
 import org.jetbrains.debugger.Vm
-import org.jetbrains.io.SimpleChannelInboundHandlerAdapter
+import org.jetbrains.io.NettyUtil
+import org.jetbrains.io.webSocket.WebSocketProtocolHandler
+import org.jetbrains.io.webSocket.WebSocketProtocolHandshakeHandler
 import org.jetbrains.wip.StandaloneWipVm
 import org.jetbrains.wip.WipVm
+import org.jetbrains.wip.protocol.inspector.DetachedEventData
 import java.net.InetSocketAddress
+import java.net.URI
 
 class BunVmConnection : WipRemoteVmConnection() {
-
-//    override fun createBootstrap(): Bootstrap {
-//        val createBootstrap = super.createBootstrap()
-//        return createBootstrap
-//    }
-//
-//    override fun createBootstrap(
-//        address: InetSocketAddress,
-//        vmResult: AsyncPromise<WipVm>
-//    ): Bootstrap {
-//        val createBootstrap = super.createBootstrap(address, vmResult)
-//        createBootstrap.handler(object : ChannelInitializer<Channel>() {
-//            override fun initChannel(ch: Channel?) {
-//                val a =
-//                    arrayOf(HttpClientCodec(), HttpObjectAggregator(10485760), createChannelHandler(address, vmResult))
-//                ch?.pipeline()?.addLast(*a)
-//            }
-//        })
-//        return createBootstrap
-//    }
-
-//    override fun createChannelHandler(
-//        address: InetSocketAddress,
-//        vmResult: AsyncPromise<WipVm>
-//    ): ChannelHandler {
-//        return Adap(address, vmResult)
-//    }
 
     override fun connectDebugger(
         page: PageConnection,
@@ -60,7 +39,56 @@ class BunVmConnection : WipRemoteVmConnection() {
         result: AsyncPromise<WipVm>,
         debugMessageQueue: MessagingLogger?
     ) {
-        super.connectDebugger(page, context, result, debugMessageQueue)
+        val url = URI.create(page.webSocketDebuggerUrl!!)
+
+        val handshaker: WebSocketClientHandshaker = WebSocketClientHandshakerFactory.newHandshaker(
+            url, WebSocketVersion.V13, null, true, EmptyHttpHeaders.INSTANCE
+        )
+        val channel = context.channel()
+
+        val vm = createVm(page, channel, debugMessageQueue)
+        vm.title = page.title
+        vm.commandProcessor.eventMap.add(DetachedEventData.TYPE) {
+            if (it.reason() == "targetCrashed") {
+                println("Target crashed")
+            } else {
+                println("Target detached")
+            }
+        }
+
+        val pipeline = channel.pipeline()
+
+        val s = arrayOf<ChannelHandler>(object : WebSocketProtocolHandshakeHandler(handshaker) {
+            override fun completed() {
+                vm.initDomains().thenRun {
+                    result.setResult(vm)
+                    vm.ready()
+                }
+            }
+
+            override fun exceptionCaught(ctx: ChannelHandlerContext?, cause: Throwable?) {
+                result.setError(cause!!)
+                ctx?.fireExceptionCaught(cause)
+            }
+        }, WebSocketFrameAggregator(NettyUtil.MAX_CONTENT_LENGTH), object : WebSocketProtocolHandler() {
+            override fun textFrameReceived(
+                channel: Channel,
+                message: TextWebSocketFrame
+            ) {
+                vm.textFrameReceived(message)
+            }
+        })
+
+        pipeline.addLast(*s)
+
+
+        val ff = handshaker.handshake(channel)
+
+        ff.addListener {
+            println(it)
+        }
+
+//        super.connectDebugger(page, context, result, debugMessageQueue)
     }
 
     override fun connectedAddressToPresentation(
@@ -83,13 +111,11 @@ class BunVmConnection : WipRemoteVmConnection() {
         "title": "run",
         "type": "node",
         "url": "file://",
-        "webSocketDebuggerUrl": "ws://localhost:6449/int1"
+        "webSocketDebuggerUrl": "ws://localhost:6499/int1"
     }
 ]"""
         val jsonBytes = s.toByteArray(Charsets.UTF_8)
-
         val byteBuf: ByteBuf = Unpooled.wrappedBuffer(jsonBytes)
-
         return super.connectToPage(context, address, byteBuf, result)
     }
 
@@ -107,53 +133,8 @@ class BunVmConnection : WipRemoteVmConnection() {
         channel: Channel,
         debugMessageQueue: MessagingLogger?
     ): StandaloneWipVm {
-        return super.createVm(page, channel, debugMessageQueue)
-    }
-}
-
-class Adap(val address: InetSocketAddress, val vmResult: AsyncPromise<WipVm>) :
-    SimpleChannelInboundHandlerAdapter<String>() {
-    override fun messageReceived(context: ChannelHandlerContext?, message: String?) {
-        println(message)
-    }
-
-    override fun channelRegistered(ctx: ChannelHandlerContext?) {
-        super.channelRegistered(ctx)
-    }
-
-    override fun channelUnregistered(ctx: ChannelHandlerContext?) {
-        super.channelUnregistered(ctx)
-    }
-
-    override fun channelActive(ctx: ChannelHandlerContext?) {
-        super.channelActive(ctx)
-        val request: DefaultFullHttpRequest = DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/json");
-        request.headers().set(HttpHeaderNames.HOST, address.hostString + ":" + address.port);
-        request.headers().set(HttpHeaderNames.ACCEPT, "*/*");
-        val ses = ctx?.channel()?.writeAndFlush(
-            BinaryWebSocketFrame(
-                Unpooled.copiedBuffer(
-                    ("{\n    \"id\": 1,\n    \"method\": \"Inspector.enable\"\n}"),
-                    CharsetUtil.UTF_8
-                )
-            )
-        )
-        ses?.addListener(io.netty.channel.ChannelFutureListener {
-            println("asd")
-        })
-    }
-
-    override fun channelInactive(ctx: ChannelHandlerContext?) {
-        super.channelInactive(ctx)
-    }
-
-    override fun channelReadComplete(ctx: ChannelHandlerContext?) {
-        super.channelReadComplete(ctx)
-    }
-
-    override fun exceptionCaught(ctx: ChannelHandlerContext?, cause: Throwable?) {
-        ctx?.close()
-        vmResult.setError(cause!!)
-        super.exceptionCaught(ctx, cause)
+        val vm = super.createVm(page, channel, debugMessageQueue)
+        val bunVm = BunWipVm(debugEventListener, page.url, channel, debugMessageQueue)
+        return bunVm
     }
 }
