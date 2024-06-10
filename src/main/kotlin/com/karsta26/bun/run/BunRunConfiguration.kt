@@ -12,7 +12,6 @@ import com.intellij.javascript.debugger.DebuggableFileFinderImpl
 import com.intellij.openapi.project.Project
 import com.intellij.xdebugger.XDebugProcess
 import com.intellij.xdebugger.XDebugSession
-import com.jetbrains.debugger.wip.WipWebSocketConnection
 import com.karsta26.bun.run.debug.BunDebugProcess
 import com.karsta26.bun.run.debug.BunVmConnection
 import org.jetbrains.debugger.DebuggableRunConfiguration
