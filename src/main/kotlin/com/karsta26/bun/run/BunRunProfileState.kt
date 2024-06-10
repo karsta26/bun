@@ -29,7 +29,7 @@ class BunRunProfileState(
         "MOCHA_COLORS" to "1"
     )
 
-    override fun startProcess(): ProcessHandler {
+    public override fun startProcess(): ProcessHandler {
         val executablePath = BunSettings.getInstance(environment.project).executablePath.also { validateExec(it) }
         val commands = mutableListOf(executablePath)
         options.myBunOptions?.let { commands.addAll(it.split(" ").map(::expandMacros)) }
