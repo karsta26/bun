@@ -82,7 +82,7 @@ class BunRunConfiguration(project: Project, factory: ConfigurationFactory) :
         environment: ExecutionEnvironment
     ): XDebugProcess {
 
-        val state = BunRunProfileState(options, environment)
+        val state = BunRunProfileState(options, environment, true)
         val s = state.startProcess()
 
         val bunDebugProcess =

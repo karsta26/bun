@@ -18,7 +18,8 @@ import kotlin.io.path.isRegularFile
 
 class BunRunProfileState(
     private val options: BunRunConfigurationOptions,
-    environment: ExecutionEnvironment
+    environment: ExecutionEnvironment,
+    val debug: Boolean = false
 ) : CommandLineState(environment) {
 
     private val colorEnvironmentVariables = mapOf(
@@ -32,7 +33,9 @@ class BunRunProfileState(
     public override fun startProcess(): ProcessHandler {
         val executablePath = BunSettings.getInstance(environment.project).executablePath.also { validateExec(it) }
         val commands = mutableListOf(executablePath)
-        options.myBunOptions?.let { commands.addAll(it.split(" ").map(::expandMacros)) }
+        if (debug) {
+            commands.add("--inspect-brk=localhost:6499/intellij")
+        }
         options.myCommand.let { commands.add(it.command) }
         if (options.mySingleFileMode) {
             options.myJSFile?.let { commands.add(it) }
