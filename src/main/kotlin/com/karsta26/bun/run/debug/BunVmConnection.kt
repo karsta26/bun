@@ -107,11 +107,11 @@ class BunVmConnection : WipRemoteVmConnection() {
 
         val s = """[
     {
-        "id": "int1",
+        "id": "intellij",
         "title": "run",
         "type": "node",
         "url": "file://",
-        "webSocketDebuggerUrl": "ws://localhost:6499/int1"
+        "webSocketDebuggerUrl": "ws://localhost:6499/intellij"
     }
 ]"""
         val jsonBytes = s.toByteArray(Charsets.UTF_8)
